@@ -3,3 +3,8 @@
 .gradle
 build
 out
+
+.aider*
+logs/
+.commit0_scripts/
+.github/workflows/

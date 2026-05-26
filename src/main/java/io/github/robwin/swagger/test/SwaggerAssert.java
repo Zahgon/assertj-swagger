@@ -22,12 +22,10 @@ import io.swagger.models.Swagger;
 import io.swagger.models.auth.AuthorizationValue;
 import io.swagger.parser.SwaggerParser;
 import org.assertj.core.api.AbstractAssert;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
-
 
 /**
  * Assertion methods for {@code Swagger}.
@@ -37,13 +35,13 @@ import java.util.Properties;
  *
  * @author Robert Winkler
  */
-
 public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
 
     private static final String ASSERTION_ENABLED_CONFIG_PATH = "/assertj-swagger.properties";
-    private DocumentationDrivenValidator documentationDrivenValidator;
-    private ConsumerDrivenValidator consumerDrivenValidator;
 
+    private DocumentationDrivenValidator documentationDrivenValidator;
+
+    private ConsumerDrivenValidator consumerDrivenValidator;
 
     public SwaggerAssert(Swagger actual) {
         super(actual, SwaggerAssert.class);
@@ -71,9 +69,7 @@ public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
      * @throws AssertionError if the actual value is not equal to the given one or if the actual value is {@code null}..
      */
     public SwaggerAssert isEqualTo(Swagger expected) {
-        SchemaObjectResolver schemaObjectResolver = new SchemaObjectResolver(expected, actual);
-        documentationDrivenValidator.validateSwagger(expected, schemaObjectResolver);
-        return myself;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -84,7 +80,7 @@ public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
      * @throws AssertionError if the actual value is not equal to the given one or if the actual value is {@code null}..
      */
     public SwaggerAssert isEqualTo(String expectedLocation) {
-        return isEqualTo(new SwaggerParser().read(expectedLocation));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -96,7 +92,7 @@ public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
      * @throws AssertionError if the actual value is not equal to the given one or if the actual value is {@code null}..
      */
     public SwaggerAssert isEqualTo(String expectedLocation, List<AuthorizationValue> auths) {
-        return isEqualTo(new SwaggerParser().read(expectedLocation, auths, true));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -107,9 +103,7 @@ public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
      * @throws AssertionError if the actual value is not equal to the given one or if the actual value is {@code null}..
      */
     public SwaggerAssert satisfiesContract(Swagger expected) {
-        SchemaObjectResolver schemaObjectResolver = new SchemaObjectResolver(expected, actual);
-        consumerDrivenValidator.validateSwagger(expected, schemaObjectResolver);
-        return myself;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -120,7 +114,7 @@ public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
      * @throws AssertionError if the actual value is not equal to the given one or if the actual value is {@code null}..
      */
     public SwaggerAssert satisfiesContract(String expectedLocation) {
-        return satisfiesContract(new SwaggerParser().read(expectedLocation));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -132,7 +126,7 @@ public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
      * @throws AssertionError if the actual value is not equal to the given one or if the actual value is {@code null}..
      */
     public SwaggerAssert satisfiesContract(String expectedLocation, List<AuthorizationValue> auths) {
-        return satisfiesContract(new SwaggerParser().read(expectedLocation, auths, true));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private SwaggerAssertionConfig loadSwaggerAssertionFlagsConfiguration(String configurationResourceLocation) {
@@ -144,7 +138,6 @@ public class SwaggerAssert extends AbstractAssert<SwaggerAssert, Swagger> {
         } catch (final IOException ioe) {
             // eat it.
         }
-
         return new SwaggerAssertionConfig(props);
     }
 }

@@ -37,10 +37,8 @@ public class SwaggerAssertions {
      * @return the created assertion object.
      */
     public static SwaggerAssert assertThat(Swagger actual) {
-        Validate.notNull(actual, "actual must not be null!");
-        return new SwaggerAssert(actual);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 
     /**
      * Creates a new instance of <code>{@link SwaggerAssert}</code>.
@@ -49,7 +47,6 @@ public class SwaggerAssertions {
      * @return the created assertion object.
      */
     public static SwaggerAssert assertThat(String actualLocation) {
-        Validate.notNull(actualLocation, "actualLocation must not be null!");
-        return new SwaggerAssert(new SwaggerParser().read(actualLocation));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

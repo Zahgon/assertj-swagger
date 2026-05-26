@@ -52,11 +52,15 @@ import org.assertj.core.api.SoftAssertions;
 class ConsumerDrivenValidator extends AbstractContractValidator {
 
     private SwaggerAssertionConfig assertionConfig;
+
     private SoftAssertions softAssertions;
+
     private PropertyValidator propertyValidator;
 
     private Swagger actual;
-    private SchemaObjectResolver schemaObjectResolver;   // provide means to fall back from local to global properties
+
+    // provide means to fall back from local to global properties
+    private SchemaObjectResolver schemaObjectResolver;
 
     ConsumerDrivenValidator(Swagger actual, SwaggerAssertionConfig assertionConfig) {
         this.actual = actual;
@@ -67,35 +71,14 @@ class ConsumerDrivenValidator extends AbstractContractValidator {
 
     @Override
     public void validateSwagger(Swagger expected, SchemaObjectResolver schemaObjectResolver) {
-        this.schemaObjectResolver = schemaObjectResolver;
-
-        validateInfo(actual.getInfo(), expected.getInfo());
-
-        // Check Paths
-        if (isAssertionEnabled(SwaggerAssertionType.PATHS)) {
-            final Set<String> filter = assertionConfig.getPathsToIgnoreInExpected();
-            final Map<String, Path> expectedPaths = findExpectedPaths(expected, assertionConfig);
-            final Map<String, Path> actualPaths = getPathsIncludingBasePath(actual);
-            validatePaths(actualPaths, removeAllFromMap(expectedPaths, filter));
-        }
-
-        // Check Definitions
-        if (isAssertionEnabled(SwaggerAssertionType.DEFINITIONS)) {
-            final Set<String> filter = assertionConfig.getDefinitionsToIgnoreInExpected();
-            validateDefinitions(actual.getDefinitions(), removeAllFromMap(expected.getDefinitions(), filter));
-        }
-
-        softAssertions.assertAll();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-
     private void validateInfo(Info actualInfo, Info expectedInfo) {
-
         // Version.  OFF by default.
         if (isAssertionEnabled(SwaggerAssertionType.VERSION)) {
             softAssertions.assertThat(actualInfo.getVersion()).as("Checking Version").isEqualTo(expectedInfo.getVersion());
         }
-
         // Everything (but potentially brittle, therefore OFF by default)
         if (isAssertionEnabled(SwaggerAssertionType.INFO)) {
             softAssertions.assertThat(actualInfo).as("Checking Info").isEqualToComparingFieldByField(expectedInfo);
@@ -149,14 +132,9 @@ class ConsumerDrivenValidator extends AbstractContractValidator {
     private void validateDefinition(String definitionName, Model actualDefinition, Model expectedDefinition) {
         if (expectedDefinition != null && actualDefinition != null) {
             validateModel(actualDefinition, expectedDefinition, String.format("Checking model of definition '%s", definitionName));
-            validateDefinitionProperties(schemaObjectResolver.resolvePropertiesFromActual(actualDefinition),
-                                         schemaObjectResolver.resolvePropertiesFromExpected(expectedDefinition),
-                                         definitionName);
-
+            validateDefinitionProperties(schemaObjectResolver.resolvePropertiesFromActual(actualDefinition), schemaObjectResolver.resolvePropertiesFromExpected(expectedDefinition), definitionName);
             if (expectedDefinition instanceof ModelImpl && actualDefinition instanceof ModelImpl) {
-                validateDefinitionRequiredProperties(((ModelImpl) actualDefinition).getRequired(),
-                                                     ((ModelImpl) expectedDefinition).getRequired(),
-                                                       definitionName);
+                validateDefinitionRequiredProperties(((ModelImpl) actualDefinition).getRequired(), ((ModelImpl) expectedDefinition).getRequired(), definitionName);
             }
         }
     }
@@ -220,13 +198,9 @@ class ConsumerDrivenValidator extends AbstractContractValidator {
             if (actualOperation != null) {
                 softAssertions.assertThat(actualOperation).as(message).isNotNull();
                 //Validate consumes
-                validateList(schemaObjectResolver.getActualConsumes(actualOperation),
-                        schemaObjectResolver.getExpectedConsumes(expectedOperation),
-                        String.format("Checking '%s' of '%s' operation of path '%s'", "consumes", httpMethod, path));
+                validateList(schemaObjectResolver.getActualConsumes(actualOperation), schemaObjectResolver.getExpectedConsumes(expectedOperation), String.format("Checking '%s' of '%s' operation of path '%s'", "consumes", httpMethod, path));
                 //Validate produces
-                validateList(schemaObjectResolver.getActualProduces(actualOperation),
-                        schemaObjectResolver.getExpectedProduces(expectedOperation),
-                        String.format("Checking '%s' of '%s' operation of path '%s'", "produces", httpMethod, path));
+                validateList(schemaObjectResolver.getActualProduces(actualOperation), schemaObjectResolver.getExpectedProduces(expectedOperation), String.format("Checking '%s' of '%s' operation of path '%s'", "produces", httpMethod, path));
                 //Validate parameters
                 validateParameters(actualOperation.getParameters(), expectedOperation.getParameters(), httpMethod, path);
                 //Validate responses
@@ -235,7 +209,7 @@ class ConsumerDrivenValidator extends AbstractContractValidator {
         }
     }
 
-    private void validateParameters(List<Parameter> actualOperationParameters,  List<Parameter> expectedOperationParameters, String httpMethod, String path) {
+    private void validateParameters(List<Parameter> actualOperationParameters, List<Parameter> expectedOperationParameters, String httpMethod, String path) {
         String message = String.format("Checking parameters of '%s' operation of path '%s'.", httpMethod, path);
         Map<String, Parameter> actualParametersMap = new HashMap<>();
         for (final Parameter parameter : actualOperationParameters) {

@@ -21,7 +21,6 @@ package io.github.robwin.swagger.test;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import org.apache.commons.lang3.StringUtils;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -40,23 +39,7 @@ public abstract class AbstractContractValidator implements ContractValidator {
      * @return expected paths
      */
     protected Map<String, Path> findExpectedPaths(Swagger expected, SwaggerAssertionConfig assertionConfig) {
-        String pathsPrependExpected = assertionConfig.getPathsPrependExpected();
-        String basePath = expected.getBasePath();
-        if (StringUtils.isBlank(pathsPrependExpected) && isBlankOrSlash(basePath)) {
-            return expected.getPaths();   // no path prefix configured and no basePath set, nothing to do
-        }
-
-        String pathPrefix = null;
-        if (StringUtils.isNotBlank(pathsPrependExpected)) {
-            pathPrefix = pathsPrependExpected;
-        } else if (!isBlankOrSlash(basePath)) {
-            pathPrefix = basePath;
-        }
-
-        final String finalPathPrefix = pathPrefix;
-        return finalPathPrefix == null ?
-                expected.getPaths() :
-                getPathsWithPrefix(expected, finalPathPrefix);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -66,16 +49,11 @@ public abstract class AbstractContractValidator implements ContractValidator {
      * @return paths including base path
      */
     protected Map<String, Path> getPathsIncludingBasePath(Swagger actual) {
-        String basePath = actual.getBasePath();
-        return isBlankOrSlash(basePath) ?
-                actual.getPaths() :
-                getPathsWithPrefix(actual, basePath);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private Map<String, Path> getPathsWithPrefix(Swagger swagger, String prefix) {
-        return swagger.getPaths().entrySet().stream().collect(Collectors.toMap(
-                e -> prefix + e.getKey(),
-                e -> e.getValue()));
+        return swagger.getPaths().entrySet().stream().collect(Collectors.toMap(e -> prefix + e.getKey(), e -> e.getValue()));
     }
 
     private boolean isBlankOrSlash(String basePath) {

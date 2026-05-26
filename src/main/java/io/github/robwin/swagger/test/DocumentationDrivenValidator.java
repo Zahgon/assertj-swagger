@@ -49,14 +49,18 @@ import org.assertj.core.api.SoftAssertions;
 
 class DocumentationDrivenValidator extends AbstractContractValidator {
 
-    private static final String[] TYPE_DEFINING_PROPERTIES = {"type", "format"};
+    private static final String[] TYPE_DEFINING_PROPERTIES = { "type", "format" };
 
     private SwaggerAssertionConfig assertionConfig;
+
     private SoftAssertions softAssertions;
+
     private PropertyValidator propertyValidator;
 
     private Swagger actual;
-    private SchemaObjectResolver schemaObjectResolver;   // provide means to fall back from local to global properties
+
+    // provide means to fall back from local to global properties
+    private SchemaObjectResolver schemaObjectResolver;
 
     DocumentationDrivenValidator(Swagger actual, SwaggerAssertionConfig assertionConfig) {
         this.actual = actual;
@@ -67,34 +71,14 @@ class DocumentationDrivenValidator extends AbstractContractValidator {
 
     @Override
     public void validateSwagger(Swagger expected, SchemaObjectResolver schemaObjectResolver) {
-        this.schemaObjectResolver = schemaObjectResolver;
-
-        validateInfo(actual.getInfo(), expected.getInfo());
-
-        // Check Paths
-        if (isAssertionEnabled(SwaggerAssertionType.PATHS)) {
-            final Set<String> filter = assertionConfig.getPathsToIgnoreInExpected();
-            final Map<String, Path> expectedPaths = findExpectedPaths(expected, assertionConfig);
-            final Map<String, Path> actualPaths = getPathsIncludingBasePath(actual);
-            validatePaths(actualPaths, removeAllFromMap(expectedPaths, filter));
-        }
-
-        // Check Definitions
-        if (isAssertionEnabled(SwaggerAssertionType.DEFINITIONS)) {
-            final Set<String> filter = assertionConfig.getDefinitionsToIgnoreInExpected();
-            validateDefinitions(actual.getDefinitions(), removeAllFromMap(expected.getDefinitions(), filter));
-        }
-
-        softAssertions.assertAll();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void validateInfo(Info actualInfo, Info expectedInfo) {
-
         // Version.  OFF by default.
         if (isAssertionEnabled(SwaggerAssertionType.VERSION)) {
             softAssertions.assertThat(actualInfo.getVersion()).as("Checking Version").isEqualTo(expectedInfo.getVersion());
         }
-
         // Everything (but potentially brittle, therefore OFF by default)
         if (isAssertionEnabled(SwaggerAssertionType.INFO)) {
             softAssertions.assertThat(actualInfo).as("Checking Info").isEqualToComparingFieldByField(expectedInfo);
@@ -150,16 +134,11 @@ class DocumentationDrivenValidator extends AbstractContractValidator {
     private void validateDefinition(String definitionName, Model actualDefinition, Model expectedDefinition) {
         if (expectedDefinition != null && actualDefinition != null) {
             validateModel(actualDefinition, expectedDefinition, String.format("Checking model of definition '%s", definitionName));
-            validateDefinitionProperties(schemaObjectResolver.resolvePropertiesFromActual(actualDefinition),
-                                         schemaObjectResolver.resolvePropertiesFromExpected(expectedDefinition),
-                                         definitionName);
-
+            validateDefinitionProperties(schemaObjectResolver.resolvePropertiesFromActual(actualDefinition), schemaObjectResolver.resolvePropertiesFromExpected(expectedDefinition), definitionName);
             if (expectedDefinition instanceof ModelImpl && actualDefinition instanceof ModelImpl) {
                 validateTypeDefinition(actualDefinition, expectedDefinition);
                 validateDefinitionEnum(actualDefinition, expectedDefinition);
-                validateDefinitionRequiredProperties(((ModelImpl) actualDefinition).getRequired(),
-                                                     ((ModelImpl) expectedDefinition).getRequired(),
-                                                       definitionName);
+                validateDefinitionRequiredProperties(((ModelImpl) actualDefinition).getRequired(), ((ModelImpl) expectedDefinition).getRequired(), definitionName);
             }
         }
     }
@@ -167,8 +146,7 @@ class DocumentationDrivenValidator extends AbstractContractValidator {
     private void validateTypeDefinition(Model actualDefinition, Model expectedDefinition) {
         ModelImpl expectedDefModelImpl = (ModelImpl) expectedDefinition;
         ModelImpl actualDefModelImpl = (ModelImpl) actualDefinition;
-        softAssertions.assertThat(actualDefModelImpl)
-            .isEqualToComparingOnlyGivenFields(expectedDefModelImpl, TYPE_DEFINING_PROPERTIES);
+        softAssertions.assertThat(actualDefModelImpl).isEqualToComparingOnlyGivenFields(expectedDefModelImpl, TYPE_DEFINING_PROPERTIES);
     }
 
     private void validateDefinitionEnum(Model actualDefinition, Model expectedDefinition) {
@@ -245,13 +223,9 @@ class DocumentationDrivenValidator extends AbstractContractValidator {
             softAssertions.assertThat(actualOperation).as(message).isNotNull();
             if (actualOperation != null) {
                 //Validate consumes
-                validateList(schemaObjectResolver.getActualConsumes(actualOperation),
-                        schemaObjectResolver.getExpectedConsumes(expectedOperation),
-                        String.format("Checking '%s' of '%s' operation of path '%s'", "consumes", httpMethod, path));
+                validateList(schemaObjectResolver.getActualConsumes(actualOperation), schemaObjectResolver.getExpectedConsumes(expectedOperation), String.format("Checking '%s' of '%s' operation of path '%s'", "consumes", httpMethod, path));
                 //Validate produces
-                validateList(schemaObjectResolver.getActualProduces(actualOperation),
-                        schemaObjectResolver.getExpectedProduces(expectedOperation),
-                        String.format("Checking '%s' of '%s' operation of path '%s'", "produces", httpMethod, path));
+                validateList(schemaObjectResolver.getActualProduces(actualOperation), schemaObjectResolver.getExpectedProduces(expectedOperation), String.format("Checking '%s' of '%s' operation of path '%s'", "produces", httpMethod, path));
                 //Validate parameters
                 validateParameters(actualOperation.getParameters(), expectedOperation.getParameters(), httpMethod, path);
                 //Validate responses
@@ -262,7 +236,7 @@ class DocumentationDrivenValidator extends AbstractContractValidator {
         }
     }
 
-    private void validateParameters(List<Parameter> actualOperationParameters,  List<Parameter> expectedOperationParameters, String httpMethod, String path) {
+    private void validateParameters(List<Parameter> actualOperationParameters, List<Parameter> expectedOperationParameters, String httpMethod, String path) {
         String message = String.format("Checking parameters of '%s' operation of path '%s'", httpMethod, path);
         if (CollectionUtils.isNotEmpty(expectedOperationParameters)) {
             softAssertions.assertThat(actualOperationParameters).as(message).isNotEmpty();
@@ -369,7 +343,7 @@ class DocumentationDrivenValidator extends AbstractContractValidator {
     }
 
     private void validateResponseByConfig(Map<String, Response> actualOperationResponses, Map<String, Response> expectedOperationResponses, String message) {
-        if(isAssertionEnabled(SwaggerAssertionType.STRICT_VALIDATION_ON_PATH)) {
+        if (isAssertionEnabled(SwaggerAssertionType.STRICT_VALIDATION_ON_PATH)) {
             softAssertions.assertThat(actualOperationResponses.keySet()).as(message).hasSameElementsAs(expectedOperationResponses.keySet());
         } else {
             softAssertions.assertThat(actualOperationResponses.keySet()).as(message).containsAll(expectedOperationResponses.keySet());

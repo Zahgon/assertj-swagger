@@ -25,18 +25,18 @@ public enum SwaggerAssertionType {
 
     INFO("validateInfo", false),
     VERSION("validateVersion", false),
-
     DEFINITIONS("validateDefinitions", true),
-        PROPERTIES("validateProperties", true),
-            REF_PROPERTIES("validateRefProperties", true),
-            ARRAY_PROPERTIES("validateArrayProperties", true),
-            BYTE_ARRAY_PROPERTIES("validateByteArrayProperties", true),
-            STRING_PROPERTIES("validateStringProperties", true),
-        MODELS("validateModels", true),
+    PROPERTIES("validateProperties", true),
+    REF_PROPERTIES("validateRefProperties", true),
+    ARRAY_PROPERTIES("validateArrayProperties", true),
+    BYTE_ARRAY_PROPERTIES("validateByteArrayProperties", true),
+    STRING_PROPERTIES("validateStringProperties", true),
+    MODELS("validateModels", true),
     PATHS("validatePaths", true),
     STRICT_VALIDATION_ON_PATH("validateResponseWithStrictlyMatch", true);
 
     private String suffix;
+
     private boolean enabledByDefault;
 
     SwaggerAssertionType(final String assertionType, final boolean defaultValue) {
@@ -45,10 +45,10 @@ public enum SwaggerAssertionType {
     }
 
     public String getBarePropertyName() {
-        return suffix;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public boolean isEnabledByDefault() {
-        return enabledByDefault;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }
